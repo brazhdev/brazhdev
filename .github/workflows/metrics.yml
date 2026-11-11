@@ -1,31 +1,19 @@
-name: Profile Metrics
-
+name: Metrics
 on:
+  # Schedule daily updates
+  schedule: [{cron: "0 0 * * *"}]
+  # (optional) Run workflow manually
   workflow_dispatch:
-  schedule:
-    - cron: "17 6 * * *"
-
-permissions:
-  contents: write
-
+  # (optional) Run workflow when pushing on master/main
+  push: {branches: ["master", "main"]}
 jobs:
-  metrics:
+  github-metrics:
     runs-on: ubuntu-latest
-
+    environment: 
+      name: production
+    permissions:
+      contents: write
     steps:
-      - name: Generate metrics
-        uses: lowlighter/metrics@latest
+      - uses: lowlighter/metrics@latest
         with:
           token: ${{ secrets.METRICS_TOKEN }}
-          committer_token: ${{ secrets.GITHUB_TOKEN }}
-          committer_branch: main
-
-          user: brazhdev
-          filename: github-metrics.svg
-          template: classic
-
-          base: header, activity, repositories
-          base_hireable: yes
-
-          plugin_isocalendar: yes
-          plugin_isocalendar_duration: half-year
