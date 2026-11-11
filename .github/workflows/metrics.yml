@@ -1,0 +1,31 @@
+name: Profile Metrics
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 6 * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate metrics
+        uses: lowlighter/metrics@latest
+        with:
+          token: ${{ secrets.METRICS_TOKEN }}
+          committer_token: ${{ secrets.GITHUB_TOKEN }}
+          committer_branch: main
+
+          user: brazhdev
+          filename: github-metrics.svg
+          template: classic
+
+          base: header, activity, repositories
+          base_hireable: yes
+
+          plugin_isocalendar: yes
+          plugin_isocalendar_duration: half-year
